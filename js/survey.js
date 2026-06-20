@@ -141,7 +141,8 @@ function collectData(formType) {
     const selected = q.querySelectorAll('.option-item.selected');
     if (selected.length > 0) {
       const values = Array.from(selected).map(s => s.dataset.value);
-      data[field] = selected.length > 1 ? values : values[0];
+      // 多选时用顿号拼接成字符串（数据库列为 TEXT 类型）
+      data[field] = values.join('、');
       return;
     }
     const input = q.querySelector('.input-text');
@@ -192,8 +193,7 @@ async function submitForm(type) {
   }
 
   const data = collectData(type);
-
-  // 数组字段保持原样，Supabase TEXT[] 列原生支持 JS 数组
+  console.log('[问卷提交] 表单类型:', type, '提交数据:', data);
 
   const btn = document.querySelector('.submit-btn');
   btn.disabled = true;
@@ -201,13 +201,18 @@ async function submitForm(type) {
 
   try {
     const tableName = type === 'booking' ? 'bookings' : 'diagnostics';
-    const { error } = await supabase.from(tableName).insert(data);
+    const { data: result, error } = await supabase.from(tableName).insert(data).select();
 
-    if (error) throw error;
+    if (error) {
+      console.error('[问卷提交] Supabase 错误:', error);
+      throw error;
+    }
 
+    console.log('[问卷提交] 提交成功:', result);
     showSuccess(type);
   } catch (err) {
-    alert('提交失败：' + (err.message || '请重试'));
+    console.error('[问卷提交] 提交失败:', err);
+    alert('提交失败：' + (err.message || err.toString() || '请重试'));
     btn.disabled = false;
     btn.textContent = type === 'booking' ? '提交预约' : '提交诊断表';
   }
