@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>二维码 - 礼服馆小红书获客问卷</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="qrcode-container">
+    <div class="qrcode-header">
+      <h1>📱 问卷二维码</h1>
+      <p>扫码即可填写对应问卷，可直接用于线下物料、微信分享等场景</p>
+    </div>
+
+    <div class="qrcode-grid">
+      <div class="qrcode-card">
+        <div class="qrcode-card-title">增长诊断预约表</div>
+        <div class="qrcode-card-desc">
+          3分钟填写 · 预约一对一沟通<br>
+          适用场景：线下活动、门店台卡、微信社群分享
+        </div>
+        <div class="qrcode-image" id="qrBooking"></div>
+        <div class="qrcode-actions">
+          <button class="btn btn-primary" onclick="downloadQR('booking')">📥 下载二维码</button>
+          <button class="btn btn-outline" onclick="copyUrl('booking')">📋 复制链接</button>
+        </div>
+        <div class="qrcode-url" id="qrBookingUrl"></div>
+      </div>
+
+      <div class="qrcode-card">
+        <div class="qrcode-card-title">增长合作诊断表</div>
+        <div class="qrcode-card-desc">
+          8-12分钟填写 · 合作匹配评估<br>
+          适用场景：顾问一对一发送、深度意向客户
+        </div>
+        <div class="qrcode-image" id="qrDiagnostic"></div>
+        <div class="qrcode-actions">
+          <button class="btn btn-primary" onclick="downloadQR('diagnostic')">📥 下载二维码</button>
+          <button class="btn btn-outline" onclick="copyUrl('diagnostic')">📋 复制链接</button>
+        </div>
+        <div class="qrcode-url" id="qrDiagnosticUrl"></div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:40px;">
+      <a href="index.html" style="color: #FF2442; text-decoration: none; font-size: 14px;">← 返回首页</a>
+    </div>
+  </div>
+
+  <script>
+    function loadQRCodes() {
+      const baseUrl = window.location.origin + window.location.pathname.replace(/[^/]*$/, '');
+      const bookingUrl = `${baseUrl}booking.html`;
+      const diagUrl = `${baseUrl}diagnostic.html`;
+
+      document.getElementById('qrBookingUrl').textContent = bookingUrl;
+      document.getElementById('qrDiagnosticUrl').textContent = diagUrl;
+
+      document.getElementById('qrBooking').innerHTML =
+        `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(bookingUrl)}" alt="预约表二维码">`;
+      document.getElementById('qrDiagnostic').innerHTML =
+        `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(diagUrl)}" alt="诊断表二维码">`;
+    }
+
+    function downloadQR(type) {
+      const img = type === 'booking'
+        ? document.querySelector('#qrBooking img')
+        : document.querySelector('#qrDiagnostic img');
+      fetch(img.src)
+        .then(r => r.blob())
+        .then(blob => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${type}_qrcode.png`;
+          a.click();
+          URL.revokeObjectURL(url);
+        })
+        .catch(() => { window.open(img.src); });
+    }
+
+    function copyUrl(type) {
+      const url = type === 'booking'
+        ? document.getElementById('qrBookingUrl').textContent
+        : document.getElementById('qrDiagnosticUrl').textContent;
+      navigator.clipboard.writeText(url).then(() => {
+        alert('链接已复制到剪贴板');
+      }).catch(() => {
+        const input = document.createElement('input');
+        input.value = url;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        alert('链接已复制到剪贴板');
+      });
+    }
+
+    loadQRCodes();
+  </script>
+</body>
+</html>
