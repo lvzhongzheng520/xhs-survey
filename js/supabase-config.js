@@ -10,7 +10,16 @@ const SUPABASE_ANON_KEY = 'sb_publishable_K7v8hMp5DwkUoZ63SP1_0g_jOq8e8s7';
 // 初始化 Supabase 客户端
 let supabase = null;
 if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  try {
+    if (typeof window.supabase === 'undefined') {
+      console.error('[Supabase] CDN 未加载，请检查网络连接');
+    } else {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      console.log('[Supabase] 客户端初始化成功');
+    }
+  } catch (e) {
+    console.error('[Supabase] 初始化失败:', e);
+  }
 }
 
 // 检查是否已配置
