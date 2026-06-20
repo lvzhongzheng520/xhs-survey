@@ -16,7 +16,7 @@
         <input type="password" class="input-text" id="loginPass" placeholder="密码">
         <button class="submit-btn" onclick="doLogin()">登录</button>
       </div>
-      <div style="margin-top:16px;font-size:12px;color:#999;text-align:center;">使用 Supabase Auth 账号登录</div>
+      <div style="margin-top:16px;font-size:12px;color:var(--text-light);text-align:center;">使用 Supabase Auth 账号登录</div>
     </div>
   </div>
 
@@ -494,7 +494,7 @@
             <div class="detail-title">${esc(d.store_name)} - 诊断详情</div>
             <button class="detail-close" onclick="closeDetail()">&times;</button>
           </div>
-          ${d.response_time === '基本无人跟进' ? '<div class="info-banner" style="background:#FFF1F0;border-color:#ffa39e;color:#cf1322;">⚠️ 高风险承接：该门店咨询基本无人跟进，建议优先补足客资承接能力</div>' : ''}
+          ${d.response_time === '基本无人跟进' ? '<div class="info-banner" style="background:#F5E8E8;border-color:#D8B8B8;color:#8B5C5C;">⚠️ 高风险承接：该门店咨询基本无人跟进，建议优先补足客资承接能力</div>' : ''}
         `;
         sections.forEach(sec => {
           html += `<div class="detail-section"><div class="detail-section-title">${sec.title}</div>`;
