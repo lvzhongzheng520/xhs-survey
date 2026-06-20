@@ -4,8 +4,8 @@
 // 1. Project URL → 填入 SUPABASE_URL
 // 2. anon public key → 填入 SUPABASE_ANON_KEY
 
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL = 'https://jzjywwubjcccbtxjbjs.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_K7v8hMp5DwkUoZ63SP1_0g_jOq8e8s7';
 
 // 初始化 Supabase 客户端
 let supabase = null;
